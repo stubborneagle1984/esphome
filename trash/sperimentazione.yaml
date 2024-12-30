@@ -1,0 +1,178 @@
+esphome:
+  name: esphome-sperimentazione
+  friendly_name: esphome-sperimentazione
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+  level: INFO
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "LtoDrvXpGwb/qTI5bd85qtgAsw9jXukFGOvZmWj2jfQ="
+
+ota:
+  password: "f7f53b46f6e3c43f7ddd4bd23e7c52fa"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # Optional manual IP
+  manual_ip:
+    static_ip: 10.4.1.133
+    gateway: 10.4.1.254
+    subnet: 255.255.255.0    
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Sperimentazione Fallback Hotspot"
+    password: "i0o3Np3l4RHM"
+
+captive_portal:
+    
+web_server:
+   port: 80
+   local: True
+
+i2c:
+  frequency: 50kHz
+
+sensor:
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    name: "WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    name: "WiFi Signal Percent"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "Signal %"
+    entity_category: "diagnostic"
+    device_class: ""  
+
+  - platform: mpu6050
+    address: 0x68
+    update_interval: 250ms    
+    accel_x:
+      name: "accel X"
+      id: accel_x
+    accel_y:
+      name: "accel Y"          
+      id: accel_y
+    accel_z:
+      id: accel_z    
+      name: "accel z"
+
+  - platform: template
+    id: roll
+    name: pan1roll
+    accuracy_decimals: 1
+    lambda: |-
+      return  (atan( id(accel_y).state / sqrt( pow( id(accel_x).state , 2) + pow( id(accel_z).state , 2) ) ) * 180 / PI) ;
+    update_interval: 250ms
+
+  - platform: template
+    id: pitch
+    name: pan1pitch
+    accuracy_decimals: 1
+    lambda: |-
+      return  (atan(-1 * id(accel_x).state / sqrt(pow(id(accel_y).state, 2) + pow(id(accel_z).state, 2))) * 180 / PI);
+    update_interval: 250ms
+#    on_value_range:
+#      - above: 44.0
+#        then:
+#          - fan.turn_off: roof_window_motor
+#          - logger.log:
+#              format: "Accelerometro: Inviato comando di spegnimento al motorino della finestra"
+#              level: INFO
+#      - below: 0.0
+#        then:
+#          - fan.turn_off: roof_window_motor
+#          - logger.log:
+#              format: "Accelerometro: Inviato comando di spegnimento al motorino della finestra"
+#             level: INFO
+
+  - platform: ina219
+    address: 0x40
+    shunt_resistance: 0.1 ohm
+    current:
+      name: "INA219 Current"
+      on_value_range:
+        - above: 0.35
+          then:
+            - fan.turn_off: roof_window_motor
+            - logger.log:
+                format: "Amperometro: Inviato comando di spegnimento al motorino della finestra (apertura massima raggiunta)"
+                level: INFO      
+        - below: -0.35
+          then:
+            - fan.turn_off: roof_window_motor
+            - logger.log:
+                format: "Amperometro: Inviato comando di spegnimento al motorino della finestra (posizione di chiusura raggiunta)"
+                level: INFO      
+    power:
+      name: "INA219 Power"
+    bus_voltage:
+      name: "INA219 Bus Voltage"
+    shunt_voltage:
+      name: "INA219 Shunt Voltage"
+    max_voltage: 2.0V
+    max_current: 0.5A
+    update_interval: 200ms
+
+#  - platform: adc
+#    pin: 36
+#    name: "Corrente assorbita motorino"
+#    update_interval: 200ms
+#    attenuation: auto
+#    accuracy_decimals: 2
+#    device_class: current
+#    unit_of_measurement: A
+#    filters:
+#      - lambda: |-
+#          return (x -2.5) / 0.066;
+
+output:
+  - platform: ledc
+    pin: GPIO26
+    id: motor_reverse_pin
+  - platform: ledc
+    pin: GPIO27
+    id: motor_forward_pin
+fan:
+  - platform: hbridge
+    id: roof_window_motor
+    name: "Motorino finestra soffitto"
+    pin_a: motor_forward_pin
+    pin_b: motor_reverse_pin
+    # enable_pin: motor_enable
+    decay_mode: slow   # slow decay mode (coasting) or fast decay (braking).    
+    on_turn_on:
+        - logger.log:
+            format: "Motorino finestra acceso!"
+            level: INFO          
+#      - if:
+#          condition:
+#            lambda: 'return (id(pitch).state > 0 && id(pitch).state <= 44);'
+#          then:
+#            - logger.log:
+#                format: "Motorino finestra acceso!"
+#                level: INFO    
+#          else:
+#            - fan.turn_off: roof_window_motor
+#            - logger.log:
+#                format: "L'inclinazione della finestra impedisce l'avvio del motorino!"
+#                level: INFO              
+    on_turn_off:
+      - logger.log:
+          format: "Motorino finestra spento!"
+          level: INFO    

@@ -1,0 +1,28 @@
+esphome:
+  name: livingroom
+
+esp32:
+  board: az-delivery-devkit-v4
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+wifi:
+  ssid: "HouseOfTheEagle2"
+  password: "marmellata1949"
+  domain: ""
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Livingroom Fallback Hotspot"
+    password: "K7HOfFg2K32B"
+
+captive_portal:
+    

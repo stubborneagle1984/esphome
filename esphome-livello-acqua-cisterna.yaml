@@ -1,0 +1,151 @@
+esphome:
+  name: esphome-livello-acqua-cisterna
+  friendly_name: esphome-livello-acqua-cisterna
+  includes:
+    - custom_web_server.h  # Indica il file personalizzat
+    - icons.h
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Configurazione Wi-Fi
+wifi:
+  ssid: !secret wifi_ssid_casa_alcamo  # Nome della rete Wi-Fi dal file secrets.yaml
+  password: !secret wifi_password_casa_alcamo  # Password della rete Wi-Fi dal file secrets.yaml
+  # Optional manual IP
+  fast_connect: true
+  manual_ip:
+    static_ip: 192.168.1.200
+    gateway: 192.168.1.1
+    subnet: 255.255.255.0  
+
+  # Impostazioni opzionali di fallback per la configurazione
+  ap:
+    ssid: "LivelloCisterna"
+    password: !secret esphome-livello-acqua-cisterna-ap-password
+
+# Configurazione per Home Assistant API (disabilitato perchè a casa ad alcamo non c'è homeassistant)
+#api:
+#  encryption:
+#    key: !secret esphome-livello-acqua-cisterna-api-encryption-key
+
+# Configurazione Over-the-Air (OTA) per aggiornamenti firmware
+ota:
+  - platform: esphome
+    password: !secret esphome-livello-acqua-cisterna-ota-password
+
+captive_portal:
+
+# Logger per debug
+logger:
+
+# Web server per accesso via browser
+web_server:
+  port: 8080  
+
+globals:
+  - id: ultrasonic_last_update
+    type: long
+    restore_value: no
+    initial_value: '0'
+    
+# Configurazione del sensore a ultrasuoni HC-SR04
+sensor:
+  - platform: ultrasonic
+    id: "sens_livello_acqua"
+    trigger_pin: GPIO25  # Pin alternativo
+    echo_pin: GPIO14     # Mantieni se non causa problemi
+    name: "Livello Acqua Cisterna"
+    unit_of_measurement: "m"
+    accuracy_decimals: 2
+    update_interval: 1s
+    timeout: 4.5m
+    filters:
+      - sliding_window_moving_average:
+          window_size: 10  # Media dei valori degli ultimi 10 campioni
+          send_every: 10   # Invio ogni 10 campioni      
+      - lambda: |-
+          if (x > 4.5) {  
+            return NAN;
+          }
+          return x;
+    on_raw_value:
+      then:
+        - lambda: |-
+            if (x > 0 && x <= 4.5) {
+              ESP_LOGI("sens_livello_acqua", "Nuovo valore raw. x=%.2f, millis()=%lu", x, millis());
+              id(ultrasonic_last_update) = millis();
+            } else { // Valori invalidi
+              ESP_LOGW("sens_livello_acqua", "Valore non valido: %.2f", x);
+            }
+
+  - platform: template
+    id: "template_litri_disp"
+    name: "Litri Disponibili"
+    unit_of_measurement: "L"
+    accuracy_decimals: 1
+    update_interval: 1s  
+    lambda: |-
+      const float larghezza = 3.125; // Larghezza della cisterna in metri
+      const float lunghezza = 3.743; // Lunghezza della cisterna in metri
+      const float altezza_massima = 2.51; // Altezza massima della cisterna in m
+      float altezza_acqua = altezza_massima - id(sens_livello_acqua).state; // Altezza dell'acqua in m
+      if (altezza_acqua < 0) {
+        return 0.0; // Evita valori negativi
+      }
+
+      float litri_disp = (larghezza * lunghezza * altezza_acqua * 1000.0); // Calcolo litri
+      ESP_LOGI("template_litri_disp", "Litri nella cisterna %.1fL", litri_disp);
+
+      return litri_disp;
+
+  - platform: template
+    id: "template_perc_riemp"
+    name: "Percentuale Riempimento"
+    unit_of_measurement: "%"
+    accuracy_decimals: 2
+    update_interval: 1s
+    lambda: |-
+      const float altezza_massima = 2.5; // Altezza massima della cisterna in m
+      float altezza_acqua = altezza_massima - id(sens_livello_acqua).state; // Altezza dell'acqua in m
+            
+      if (altezza_acqua < 0) {
+        return 0.0; // Evita valori negativi
+      }
+
+      float perc_riempimento = (altezza_acqua / altezza_massima) * 100.0; // Calcolo percentuale;
+      ESP_LOGI("template_perc_riemp", "Percentuale riempimento della cisterna %.1f", perc_riempimento);
+
+      return perc_riempimento;
+
+# Configurazione del dispositivo come entità in Home Assistant
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "IP Dispositivo ESP32"
+    ssid:
+      name: "SSID Connesso"
+    bssid:
+      name: "BSSID Connesso"
+      
+# Aggiungi un endpoint personalizzato
+custom_component:
+  - lambda: |-
+      auto web_server = new CustomWebServer();
+      App.register_component(web_server);
+      return {};
+
+binary_sensor:
+  - platform: template
+    id: ultrasonic_liveness
+    name: "Liveness sensore ultrasuoni"
+    lambda: |-
+      // Se ultrasonic_last_update non è mai stato aggiornato, il sensore è "Disconnesso"
+      if (id(ultrasonic_last_update) == 0) {
+        return false;  // Stato iniziale disconnesso
+      }    
+      // Il sensore è attivo se ha fornito un valore negli ultimi 2 secondi
+      return (millis() - id(ultrasonic_last_update)) < 2000;
+    device_class: connectivity
