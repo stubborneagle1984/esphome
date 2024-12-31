@@ -1,0 +1,9 @@
+Update
+WiFi
+esphome/ESPAsyncWebServer-esphome@3.1.0
+ESPmDNS
+esphome/noise-c@0.1.4
+bblanchon/ArduinoJson@6.18.5
+esphome/AsyncTCP-esphome@2.0.1
+FS
+DNSServer

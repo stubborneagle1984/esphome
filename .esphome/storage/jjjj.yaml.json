@@ -1,0 +1,30 @@
+{
+  "storage_version": 1,
+  "name": "jjjj",
+  "friendly_name": "jjjj",
+  "comment": null,
+  "esphome_version": "2024.2.0b2",
+  "src_version": 1,
+  "address": "jjjj.local",
+  "web_port": null,
+  "esp_platform": "ESP32",
+  "build_path": "/config/.esphome/build/jjjj",
+  "firmware_bin_path": "/config/.esphome/build/jjjj/.pioenvs/jjjj/firmware.bin",
+  "loaded_integrations": [
+    "api",
+    "async_tcp",
+    "captive_portal",
+    "esp32",
+    "esphome",
+    "logger",
+    "md5",
+    "mdns",
+    "network",
+    "ota",
+    "preferences",
+    "socket",
+    "web_server_base",
+    "wifi"
+  ],
+  "no_mdns": false
+}

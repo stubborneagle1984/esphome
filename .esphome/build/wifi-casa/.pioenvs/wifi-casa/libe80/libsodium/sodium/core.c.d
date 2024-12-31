@@ -1,0 +1,20 @@
+.pioenvs/wifi-casa/libe80/libsodium/sodium/core.c.o: \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/sodium/core.c \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include/assert.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include/sdkconfig.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include/time.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/core.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/export.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/crypto_generichash.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/crypto_generichash_blake2b.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/crypto_onetimeauth.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/crypto_onetimeauth_poly1305.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/crypto_scalarmult.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/crypto_scalarmult_curve25519.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/crypto_stream_chacha20.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/crypto_stream_salsa20.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/randombytes.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/runtime.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/utils.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/private/implementations.h \
+ .piolibdeps/wifi-casa/libsodium/libsodium/src/libsodium/include/sodium/private/mutex.h

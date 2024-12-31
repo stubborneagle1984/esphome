@@ -1,0 +1,29 @@
+.pioenvs/esphome-sperimentazione-2/src/esphome/components/esp32/gpio.cpp.o: \
+ src/esphome/components/esp32/gpio.cpp \
+ src/esphome/components/esp32/gpio.h src/esphome/core/hal.h \
+ src/esphome/core/gpio.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_attr.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/driver/include/driver/gpio.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_err.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_compiler.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/esp_intr_alloc.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_types.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_bit_defs.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/soc_caps.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/include/soc/gpio_periph.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/io_mux_reg.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/soc.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_assert.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/gpio_struct.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/gpio_reg.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/gpio_sig_map.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/hal/include/hal/gpio_types.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/gpio.h \
+ src/esphome/core/log.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/log/include/esp_log.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp_rom_sys.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/reset_reasons.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/ets_sys.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/log/include/esp_log_internal.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-log.h \
+ /config/.esphome/platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_timer/include/esp_timer.h

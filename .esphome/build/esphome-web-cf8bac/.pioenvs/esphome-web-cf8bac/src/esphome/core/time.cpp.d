@@ -1,0 +1,2 @@
+.pioenvs/esphome-web-cf8bac/src/esphome/core/time.cpp.o: \
+ src/esphome/core/time.cpp src/esphome/core/time.h
